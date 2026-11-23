@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Breaking changes (strict mode)
+
+**Four enum members that NetSuite doesn't have are removed** (#475, @simeon-unicare)
+
+`search.Type.EMPLOYEE_CHANGE_TYPE`, `search.Type.FIN_RPT_AGGREGATE_F_R`, `serverWidget.FieldType.PASSPORT` and `format.Timezone.ASIA_MAGADAN` aren't present at runtime on NetSuite 2026.2, so code that used them passed `undefined` to NetSuite. Only `EMPLOYEE_CHANGE_TYPE` is in Oracle's documentation; for employee change request types, use `search.Type.EMPLOYEE_CHANGE_REQUEST_TYPE`.
+
+### New
+
+- **Enum values:** `search.Type`, `serverWidget.FieldType` and `format.Timezone` now have the string values NetSuite uses, read at runtime on NetSuite 2026.2, completing #468 (#475, @simeon-unicare). `search.Type` values are mostly lower case (`search.Type.SALES_ORDER` is `'salesorder'`, but `search.Type.SYSTEM_NOTE` is `'SystemNote'`), and `format.Timezone` values are Olson names (`format.Timezone.AUSTRALIA_PERTH` is `'Australia/Perth'`).
+
 ### Fixes
 
 - **N/query:** `ResultSet.asMappedResults()` and `Result.asMap()` now infer their row type from the variable they're assigned to, so `const rows: { id: number }[] = resultSet.asMappedResults()` compiles without a cast. Each pair of overloads is now one generic signature that defaults to `QueryResultMap`, so `asMappedResults<{ id: number }>()`, casts and code that names no type work as before (#307).
