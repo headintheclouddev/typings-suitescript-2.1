@@ -5,6 +5,7 @@
 ### Fixes
 
 - **N/query:** `ResultSet.asMappedResults()` and `Result.asMap()` now infer their row type from the variable they're assigned to, so `const rows: { id: number }[] = resultSet.asMappedResults()` compiles without a cast. Each pair of overloads is now one generic signature that defaults to `QueryResultMap`, so `asMappedResults<{ id: number }>()`, casts and code that names no type work as before (#307).
+- **N/query:** `query.DateId` is now a plain `enum` instead of a `const enum`, so it can be used with `isolatedModules`, which per-file transpilers such as SWC, Babel and esbuild need (it gave `TS2748: Cannot access ambient const enums when 'isolatedModules' is enabled`). Its values are unchanged and were read at runtime on NetSuite 2026.2. tsc now emits `query.DateId.DAYS_AGO` instead of inlining `"dago"`, which works the same at runtime (#474).
 
 ## 2026.2.9
 
