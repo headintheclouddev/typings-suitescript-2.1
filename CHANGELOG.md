@@ -10,6 +10,7 @@
 
 ### New
 
+- **N/dataStore:** Typings for the new module in NetSuite 2026.2, which stores application data as JSON documents in collections, without custom records. It covers `dataStore.getDatastore()`, `dataStore.getCollection()`, the `Datastore`, `Collection` and `Cursor` objects, and the result objects. Collections are generic, so `dataStore.getCollection<Checkpoint>('checkpoints')` types the documents that `find()` and `findOne()` return, and the documents and updates you pass in. A cursor works with `for await...of`. Queries accept the field operators NetSuite supports (`$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte`, `$in`, `$exists` and `$elemMatch`) and `$and` and `$or`, and updates accept `$set`, `$unset` and `$inc`, so an unsupported operator such as `$nin` doesn't compile.
 - **Enum values:** `search.Type`, `serverWidget.FieldType` and `format.Timezone` now have the string values NetSuite uses, read at runtime on NetSuite 2026.2, completing #468 (#475, @simeon-unicare). `search.Type` values are mostly lower case (`search.Type.SALES_ORDER` is `'salesorder'`, but `search.Type.SYSTEM_NOTE` is `'SystemNote'`), and `format.Timezone` values are Olson names (`format.Timezone.AUSTRALIA_PERTH` is `'Australia/Perth'`).
 
 ### Fixes
