@@ -20,7 +20,7 @@
 
 ### Documentation
 
-- **N/record, N/email, N/search:** the promise forms that Oracle documents as client-only, such as `record.load.promise` and `PagedData.fetch.promise`, say that they also work in server scripts and whether they run asynchronously there, verified on NetSuite 2026.2 (#PRNUM, @simeon-unicare).
+- **N/record, N/email, N/search:** the promise forms that Oracle documents as client-only, such as `record.load.promise` and `PagedData.fetch.promise`, say that they also work in server scripts and whether they run asynchronously there, verified on NetSuite 2026.2 (#  - Event subscriptions are in preview and may not be enabled for your account., @simeon-unicare).
 
 ## 2026.2.9
 
