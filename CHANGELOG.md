@@ -18,6 +18,10 @@
 - **N/query:** `ResultSet.asMappedResults()` and `Result.asMap()` now infer their row type from the variable they're assigned to, so `const rows: { id: number }[] = resultSet.asMappedResults()` compiles without a cast. Each pair of overloads is now one generic signature that defaults to `QueryResultMap`, so `asMappedResults<{ id: number }>()`, casts and code that names no type work as before (#307).
 - **N/query:** `query.DateId` is now a plain `enum` instead of a `const enum`, so it can be used with `isolatedModules`, which per-file transpilers such as SWC, Babel and esbuild need (it gave `TS2748: Cannot access ambient const enums when 'isolatedModules' is enabled`). Its values are unchanged and were read at runtime on NetSuite 2026.2. tsc now emits `query.DateId.DAYS_AGO` instead of inlining `"dago"`, which works the same at runtime (#474).
 
+### Documentation
+
+- **N/record, N/email, N/search:** the promise forms that Oracle documents as client-only, such as `record.load.promise` and `PagedData.fetch.promise`, say that they also work in server scripts and whether they run asynchronously there, verified on NetSuite 2026.2 (#PRNUM, @simeon-unicare).
+
 ## 2026.2.9
 
 ### Breaking changes (strict mode)
