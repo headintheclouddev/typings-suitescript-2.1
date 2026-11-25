@@ -1,8 +1,8 @@
 # Async user event, Suitelet and client entry points
 
 - **NetSuite version:** 2026.2
-- **Account type:** production (every write was to a custom record type made for this test)
-- **Date:** 2026-11-24
+- **Account type:** production, and repeated in a sandbox (every write was to a custom record type made for this test)
+- **Date:** 2026-11-24, and 2026-11-25 in the sandbox
 - **Method:** deployed user event, Suitelet and client scripts on a custom record type, driven by a scheduled script and by hand in the browser
 - **Probe:** none in `probes/`: it writes, and it needs user event and client deployments the suitescript-verify runner cannot host. The relevant code is below
 
@@ -70,9 +70,42 @@ A scheduled script saved records in each scenario and read the fields straight a
 
 Whenever an async entry point rejected, the script's execution log showed only `UNEXPECTED_ERROR: An unexpected SuiteScript error has occurred`, and a page showed NetSuite's generic notice; a scripted `save()` received the real error.
 
+### A plain function that returns a promise
+
+The types allow any function that returns a promise, not only an `async` one, so the user event and Suitelet tests were repeated in a sandbox (2026-11-25) with each entry point exported through a wrapper. What NetSuite called was then a plain function that returns the handler's promise, having first attached its own handling of a rejection:
+
+```js
+const logged = (name, handler) => context => {
+  const result = handler(context);
+  return typeof result?.then === 'function' ? logRejection(name, result) : result;
+};
+const logRejection = async (name, promise) => {
+  try {
+    await promise;
+  }
+  catch (e) {
+    log.error({ title: `${name} failed`, details: { name: e.name, message: e.message } });
+    throw e;
+  }
+};
+
+return { beforeLoad: logged('beforeLoad', beforeLoad), beforeSubmit: logged('beforeSubmit', beforeSubmit), afterSubmit: logged('afterSubmit', afterSubmit) };
+```
+
+The records were saved on their form in the browser, and the Suitelet was requested from it.
+
+| Entry point | What happened |
+| --- | --- |
+| `beforeLoad` | The field added after the awaits showed on the form. |
+| `beforeSubmit` | The field set after the awaits was saved. Thrown after the awaits, the error stopped the save, with NetSuite's generic notice. |
+| `afterSubmit` | The field set after the awaits was there when the page reloaded. Thrown after the awaits, the error gave NetSuite's generic notice. |
+| `onRequest` | The response written after the awaits arrived (HTTP 200). Thrown after the awaits, the error gave an HTTP 500 error page. |
+
+Each rejection left the wrapper's own entry in the execution log, with the error's name and message, beside NetSuite's `UNEXPECTED_ERROR`.
+
 ## Explanation
 
-NetSuite waits for the promise an async user event or Suitelet entry point returns, and a rejection behaves like a throw. It does not wait for an async `saveRecord`: it treats the returned promise as `true`, so the record saves whatever the promise resolves to. `pageInit` ran to completion, but NetSuite uses no return value from it, so it cannot show whether NetSuite waited.
+NetSuite waits for the promise a user event or Suitelet entry point returns, whether the entry point is an `async` function or a plain one that returns a promise, and a rejection behaves like a throw. An entry point that catches the rejection, logs it and rethrows gets the real error into the execution log. It does not wait for an async `saveRecord`: it treats the returned promise as `true`, so the record saves whatever the promise resolves to. `pageInit` ran to completion, but NetSuite uses no return value from it, so it cannot show whether NetSuite waited.
 
 ## Decision
 
