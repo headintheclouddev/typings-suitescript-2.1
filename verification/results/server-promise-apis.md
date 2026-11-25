@@ -1,8 +1,8 @@
 # Client-only promise APIs in a server script
 
 - **NetSuite version:** 2026.2
-- **Account type:** production (three runs; every write was to a throwaway folder the script created and deleted)
-- **Date:** 2026-11-23 and 2026-11-24
+- **Account type:** production (three runs, and a read-only fourth for `ResultSet.each.promise`; every write was to a throwaway folder the script created and deleted)
+- **Date:** 2026-11-23 to 2026-11-25
 - **Method:** deployed scheduled script (SuiteScript 2.1), with an `async` `execute` entry point that awaits the checks
 - **Probe:** none in `probes/`: it writes, so the suitescript-verify runner cannot run it. Its checks are below
 
@@ -121,9 +121,24 @@ Every check returned a promise and settled without an error (the third run, 2026
 
 Ten loads of one record took 730 ms with `record.load`, 638 ms with `await record.load.promise` one at a time, and 749 ms with `Promise.allSettled`.
 
+### `ResultSet.each.promise`, with its callbacks counted
+
+Timing alone cannot tell whether `each.promise` ran its callbacks before returning, as a search that runs inside the call looks the same. A fourth, read-only run (2026-11-25) counted them: it noted how many callbacks had run when the call returned, after one `await Promise.resolve()`, and when the promise settled, and timed each callback from the call. Each check ran three times, with plain `each` for comparison:
+
+| Check | callMs | Callbacks run at return | After one microtask | At settle | settleMs |
+| --- | --- | --- | --- | --- | --- |
+| `each.promise`, `run()` inside the call, stop after 5 | 778 to 1024 | 0 | 5 | 5 | 1040 to 4320 |
+| `each.promise`, `run()` before the call, stop after 3 | 744 to 897 | 0 | 3 | 3 | 3956 to 4555 |
+| `each.promise`, `run()` before the call, stop after 25 | 934 to 1033 | 0 | 25 | 25 | 4359 to 4921 |
+| `each`, `run()` before the call, stop after 3 | 748 to 1011 | 3 | | | |
+
+Every callback of a call ran within the same millisecond, 15 to 31 ms after the call returned, and the promise resolved to `true`.
+
 ## Explanation
 
-All the APIs work in a server script; none raised an error. The `record` promises and `ResultSet.each.promise` do their work inside the call and return a settled promise, so in a server script they give no concurrency: `Promise.allSettled` was no faster than loading one record after another. `PagedData.fetch`, `Page.next`, `ResultSet.getRange` and `email.send` return at once and settle later, like the documented `search.lookupFields.promise`.
+All the APIs work in a server script; none raised an error. The `record` promises do their work inside the call and return a settled promise, so in a server script they give no concurrency: `Promise.allSettled` was no faster than loading one record after another. `PagedData.fetch`, `Page.next`, `ResultSet.getRange` and `email.send` return at once and settle later, like the documented `search.lookupFields.promise`.
+
+`ResultSet.each.promise` is neither. The call blocks while the search runs, for as long as plain `each` (the first three runs read its 840 ms call as the whole `each` running inside it), but it invokes the callbacks only after it returns, and the promise settles later still. So it gives no concurrency either. A RESTlet check in a sandbox on 2026.2 (see #477) also found no callbacks run at return, with a call of 39 to 53 ms, presumably because its search was quicker.
 
 Not tested: `record.attach.promise` and `record.detach.promise` (they would write to a real record), `email.sendBulk.promise`, `email.sendCampaignEvent.promise` and `Page.prev.promise`.
 

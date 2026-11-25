@@ -199,7 +199,8 @@ interface SearchResultSetGetRangeFunction {
 interface SearchResultSetEachFunction {
     /**
      * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
-     * NetSuite 2026.2). In a server script it does its work before returning, so it gives no concurrency.
+     * NetSuite 2026.2). In a server script the call blocks while the search runs, for as long as `each` would, but it
+     * invokes the callback only after it returns, and the promise settles later still, so it gives no concurrency.
      * See verification/results/server-promise-apis.md.
      * Invokes the callback for each result. The callback must return true to continue iterating, or false to stop.
      * @governance 10 units
