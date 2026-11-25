@@ -15,14 +15,18 @@ interface CreateOptions {
 
 /**
  * Encapsulates a SuiteScript error thrown by any script type that is not a user event script.
+ * It is a plain object, not an instance of Error, so `error instanceof Error` is false for one (verified on NetSuite
+ * 2026.2). See verification/results/error-suitescripterror-shape.md.
  * @since 2015.2
  */
 export interface SuiteScriptError {
     /**
      * Error ID that is automatically generated when a new error is created.
+     * It is null for an error made with error.create. For an error NetSuite throws it is the internal ID of the record
+     * for a missing record (RCRD_DSNT_EXIST), and otherwise usually an empty string (verified on NetSuite 2026.2).
      * @since 2015.2
      */
-    readonly id: string;
+    readonly id: string | null;
     /**
      * Text that displays on the SuiteScript Execution Log, in the Details column.
      * @since 2015.2
@@ -35,14 +39,23 @@ export interface SuiteScriptError {
     readonly name: string | Type;
     /**
      * A list of method calls that the script is executing when the error is thrown. The most recently executed method is listed at the top.
+     * An error NetSuite throws holds the whole list as one string, with a line per call; one made with error.create
+     * holds a string per call (verified on NetSuite 2026.2). `stack.join('\n')` reads either.
      * @since 2015.2
      */
     readonly stack: string[];
     /**
      * The cause of the error message.
+     * NetSuite sets it to an object that repeats the error: its `name` and `message` for an error made with
+     * error.create, and otherwise an internal error that holds them as `code` and `details` (verified on NetSuite 2026.2).
      * @since 2015.2
      */
     readonly cause: any;
+    /**
+     * The kind of error object, which is always 'error.SuiteScriptError' (verified on NetSuite 2026.2).
+     * It tells a SuiteScriptError from other values a script may catch, as `instanceof Error` cannot.
+     */
+    readonly type: string;
     /**
      * Whether email notification is suppressed.
      * @since 2015.2
