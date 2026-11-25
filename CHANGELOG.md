@@ -4,7 +4,7 @@
 
 ### Breaking changes (strict mode)
 
-**`SuiteScriptError.id` can be null** (@simeon-unicare)
+**`SuiteScriptError.id` can be null** (#479, @simeon-unicare)
 
 An error made with `error.create` has an `id` of `null` on NetSuite 2026.2, so `SuiteScriptError.id` is now `string | null`. Code that passes it where a string is needed must allow for null, for example with `error.id ?? ''`. Errors that NetSuite's own modules throw have a string, which is often empty.
 
@@ -19,7 +19,7 @@ An error made with `error.create` has an `id` of `null` on NetSuite 2026.2, so `
 
 ### Fixes
 
-- **N/error:** `SuiteScriptError` has the `type` property NetSuite gives it, which is always `'error.SuiteScriptError'` and tells one from other caught values, as a SuiteScriptError is not an instance of `Error`. The doc comments on `stack` and `cause` say what they hold, read at runtime on NetSuite 2026.2 (@simeon-unicare).
+- **N/error:** `SuiteScriptError` has the `type` property NetSuite gives it, which is always `'error.SuiteScriptError'` and tells one from other caught values, as a SuiteScriptError is not an instance of `Error`. The doc comments on `stack` and `cause` say what they hold, read at runtime on NetSuite 2026.2 (#479, @simeon-unicare).
 
 - **N/query:** `ResultSet.asMappedResults()` and `Result.asMap()` now infer their row type from the variable they're assigned to, so `const rows: { id: number }[] = resultSet.asMappedResults()` compiles without a cast. Each pair of overloads is now one generic signature that defaults to `QueryResultMap`, so `asMappedResults<{ id: number }>()`, casts and code that names no type work as before (#307).
 - **N/query:** `query.DateId` is now a plain `enum` instead of a `const enum`, so it can be used with `isolatedModules`, which per-file transpilers such as SWC, Babel and esbuild need (it gave `TS2748: Cannot access ambient const enums when 'isolatedModules' is enabled`). Its values are unchanged and were read at runtime on NetSuite 2026.2. tsc now emits `query.DateId.DAYS_AGO` instead of inlining `"dago"`, which works the same at runtime (#474).
