@@ -15,7 +15,7 @@ interface RecordSaveFunction {
     /**
      * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
      * NetSuite 2026.2). In a server script it does its work before returning, so it gives no concurrency.
-     * See verification/results/server-promise-apis.md.
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @governance 20 units for transactions, 4 for custom records, 10 for all other records
      * @since 2015.2
      */
@@ -1170,7 +1170,7 @@ interface SubmitFieldsFunction {
     /**
      * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
      * NetSuite 2026.2). In a server script it does its work before returning, so it gives no concurrency.
-     * See verification/results/server-promise-apis.md.
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @throws {SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if a required argument is missing or undefined
      * @governance 10 units for transactions, 2 for custom records, 5 for all other records
      * @since 2015.2
@@ -1193,7 +1193,7 @@ interface RecordCopyFunction {
     /**
      * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
      * NetSuite 2026.2). In a server script it does its work before returning, so it gives no concurrency.
-     * See verification/results/server-promise-apis.md.
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @throws {SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if a required argument is missing or undefined
      * @governance 10 units for transactions, 2 for custom records, 5 for all other records
      * @since 2015.2
@@ -1215,7 +1215,7 @@ interface RecordCreateFunction {
     /**
      * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
      * NetSuite 2026.2). In a server script it does its work before returning, so it gives no concurrency.
-     * See verification/results/server-promise-apis.md.
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @throws {SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if a required argument is missing or undefined
      * @governance 10 units for transactions, 2 for custom records, 5 for all other records
      * @since 2015.2
@@ -1256,7 +1256,7 @@ interface RecordLoadFunction {
     /**
      * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
      * NetSuite 2026.2). In a server script it does its work before returning, so it gives no concurrency.
-     * See verification/results/server-promise-apis.md.
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @throws {SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if a required argument is missing or undefined
      * @governance 10 units for transactions, 2 for custom records, 5 for all other records
      * @since 2015.2
@@ -1277,7 +1277,7 @@ interface RecordDeleteFunction {
     /**
      * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
      * NetSuite 2026.2). In a server script it does its work before returning, so it gives no concurrency.
-     * See verification/results/server-promise-apis.md.
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @throws {SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if a required argument is missing or undefined
      * @governance 20 units for transactions, 4 for custom records, 10 for all other records
      * @since 2015.2
@@ -1297,7 +1297,7 @@ interface RecordTransformFunction {
     /**
      * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
      * NetSuite 2026.2). In a server script it does its work before returning, so it gives no concurrency.
-     * See verification/results/server-promise-apis.md.
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @throws {SuiteScriptError} SSS_MISSING_REQD_ARGUMENT if a required argument is missing or undefined
      * @governance 10 units for transactions, 2 for custom records, 5 for all other records
      * @since 2015.2

@@ -97,8 +97,8 @@ interface EmailSendFunction {
     (options: SendOptions): void;
     /**
      * Oracle documents this promise as client-only. email.send.promise also works in SuiteScript 2.1 server scripts, where
-     * it runs asynchronously (verified on NetSuite 2026.2); sendBulk was not tested.
-     * See verification/results/server-promise-apis.md.
+     * it runs asynchronously (verified on NetSuite 2026.2).
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @governance 20 units
      * @since 2015.2
      */
