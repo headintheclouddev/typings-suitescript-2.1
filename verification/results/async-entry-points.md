@@ -109,4 +109,6 @@ NetSuite waits for the promise a user event or Suitelet entry point returns, whe
 
 ## Decision
 
-The user event and Suitelet entry points, and the client `pageInit`, `postSourcing`, `sublistChanged` and `lineInit` (whose return values NetSuite ignores), are typed `void | Promise<void>`, with a doc comment on how each behaves when async. `saveRecord` and the validate entry points stay `boolean`, with a doc comment that they must be synchronous, so an async one does not compile. `fieldChanged` stays `void`, with a doc comment that an async version runs without NetSuite waiting for it.
+`Promise` appears in an entry point's type only where NetSuite waits for it. The user event entry points and the Suitelet's `onRequest` are typed `void | Promise<void>`. Every client entry point keeps its type: `pageInit`, `postSourcing`, `sublistChanged`, `lineInit` and `fieldChanged` stay `void`, and `saveRecord` and the validate entry points stay `boolean`. Each has a doc comment on how it behaves when async.
+
+The types did not stop an async entry point before: TypeScript lets a function that returns a promise fill a `void` return type, so only the `boolean` ones refuse one. The change matters to lint rules that check for a promise where none is expected, and to what the types tell a reader.

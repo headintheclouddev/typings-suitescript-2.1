@@ -114,11 +114,12 @@ export namespace EntryPoints {
         }
 
         /**
-         * Can be async: NetSuite uses no return value from it, so an async version runs to completion. NetSuite does not
-         * wait for it, though, so other entry points can run before the code after an await finishes.
+         * Declared synchronous. An async version still runs, as NetSuite uses no return value from it, but NetSuite does
+         * not wait for it, so other entry points can run before the code after an await finishes (seen for pageInit on
+         * NetSuite 2026.2).
          * @since 2015.2
          */
-        type lineInit = (scriptContext: lineInitContext) => void | Promise<void>;
+        type lineInit = (scriptContext: lineInitContext) => void;
 
         interface pageInitContext {
             currentRecord: N_record.ClientCurrentRecord;
@@ -126,11 +127,12 @@ export namespace EntryPoints {
         }
 
         /**
-         * Can be async: NetSuite uses no return value from it, so an async version runs to completion. NetSuite does not
-         * wait for it, though, so other entry points can run before the code after an await finishes.
+         * Declared synchronous. An async version still runs, as NetSuite uses no return value from it, but NetSuite does
+         * not wait for it, so other entry points can run before the code after an await finishes (seen for pageInit on
+         * NetSuite 2026.2).
          * @since 2015.2
          */
-        type pageInit = (scriptContext: pageInitContext) => void | Promise<void>;
+        type pageInit = (scriptContext: pageInitContext) => void;
 
         interface postSourcingContext {
             currentRecord: N_record.ClientCurrentRecord;
@@ -139,11 +141,12 @@ export namespace EntryPoints {
         }
 
         /**
-         * Can be async: NetSuite uses no return value from it, so an async version runs to completion. NetSuite does not
-         * wait for it, though, so other entry points can run before the code after an await finishes.
+         * Declared synchronous. An async version still runs, as NetSuite uses no return value from it, but NetSuite does
+         * not wait for it, so other entry points can run before the code after an await finishes (seen for pageInit on
+         * NetSuite 2026.2).
          * @since 2015.2
          */
-        type postSourcing = (scriptContext: postSourcingContext) => void | Promise<void>;
+        type postSourcing = (scriptContext: postSourcingContext) => void;
 
         interface saveRecordContext {
             currentRecord: N_record.ClientCurrentRecord;
@@ -166,11 +169,12 @@ export namespace EntryPoints {
         }
 
         /**
-         * Can be async: NetSuite uses no return value from it, so an async version runs to completion. NetSuite does not
-         * wait for it, though, so other entry points can run before the code after an await finishes.
+         * Declared synchronous. An async version still runs, as NetSuite uses no return value from it, but NetSuite does
+         * not wait for it, so other entry points can run before the code after an await finishes (seen for pageInit on
+         * NetSuite 2026.2).
          * @since 2015.2
          */
-        type sublistChanged = (scriptContext: sublistChangedContext) => void | Promise<void>;
+        type sublistChanged = (scriptContext: sublistChangedContext) => void;
 
         interface validateDeleteContext {
             currentRecord: N_record.ClientCurrentRecord;
