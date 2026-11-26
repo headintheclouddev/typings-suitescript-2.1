@@ -101,7 +101,11 @@ export namespace EntryPoints {
             column?: number;
         }
 
-        /** @since 2015.2 */
+        /**
+         * Declared synchronous. An async version still runs, but NetSuite does not wait for it, so other fieldChanged,
+         * postSourcing and saveRecord calls can run before the code after an await finishes.
+         * @since 2015.2
+         */
         type fieldChanged = (scriptContext: fieldChangedContext) => void;
 
         interface lineInitContext {
@@ -109,7 +113,12 @@ export namespace EntryPoints {
             sublistId: string;
         }
 
-        /** @since 2015.2 */
+        /**
+         * Declared synchronous. An async version still runs, as NetSuite uses no return value from it, but NetSuite does
+         * not wait for it, so other entry points can run before the code after an await finishes (seen for pageInit on
+         * NetSuite 2026.2).
+         * @since 2015.2
+         */
         type lineInit = (scriptContext: lineInitContext) => void;
 
         interface pageInitContext {
@@ -117,7 +126,12 @@ export namespace EntryPoints {
             mode: 'create' | 'copy' | 'edit' | 'view';
         }
 
-        /** @since 2015.2 */
+        /**
+         * Declared synchronous. An async version still runs, as NetSuite uses no return value from it, but NetSuite does
+         * not wait for it, so other entry points can run before the code after an await finishes (seen for pageInit on
+         * NetSuite 2026.2).
+         * @since 2015.2
+         */
         type pageInit = (scriptContext: pageInitContext) => void;
 
         interface postSourcingContext {
@@ -126,14 +140,23 @@ export namespace EntryPoints {
             fieldId: string;
         }
 
-        /** @since 2015.2 */
+        /**
+         * Declared synchronous. An async version still runs, as NetSuite uses no return value from it, but NetSuite does
+         * not wait for it, so other entry points can run before the code after an await finishes (seen for pageInit on
+         * NetSuite 2026.2).
+         * @since 2015.2
+         */
         type postSourcing = (scriptContext: postSourcingContext) => void;
 
         interface saveRecordContext {
             currentRecord: N_record.ClientCurrentRecord;
         }
 
-        /** @since 2015.2 */
+        /**
+         * Must be synchronous. NetSuite does not wait for a returned promise and treats it as true, so an async version
+         * cannot stop the action (verified for saveRecord on NetSuite 2026.2).
+         * @since 2015.2
+         */
         type saveRecord = (scriptContext: saveRecordContext) => boolean;
 
         interface sublistChangedContext {
@@ -145,7 +168,12 @@ export namespace EntryPoints {
             operation: string;
         }
 
-        /** @since 2015.2 */
+        /**
+         * Declared synchronous. An async version still runs, as NetSuite uses no return value from it, but NetSuite does
+         * not wait for it, so other entry points can run before the code after an await finishes (seen for pageInit on
+         * NetSuite 2026.2).
+         * @since 2015.2
+         */
         type sublistChanged = (scriptContext: sublistChangedContext) => void;
 
         interface validateDeleteContext {
@@ -155,7 +183,11 @@ export namespace EntryPoints {
             lineCount: number; // As of 2020.2
         }
 
-        /** @since 2015.2 */
+        /**
+         * Must be synchronous. NetSuite does not wait for a returned promise and treats it as true, so an async version
+         * cannot stop the action (verified for saveRecord on NetSuite 2026.2).
+         * @since 2015.2
+         */
         type validateDelete = (scriptContext: validateDeleteContext) => boolean;
 
         interface validateFieldContext {
@@ -166,7 +198,11 @@ export namespace EntryPoints {
             column?: number;
         }
 
-        /** @since 2015.2 */
+        /**
+         * Must be synchronous. NetSuite does not wait for a returned promise and treats it as true, so an async version
+         * cannot stop the action (verified for saveRecord on NetSuite 2026.2).
+         * @since 2015.2
+         */
         type validateField = (scriptContext: validateFieldContext) => boolean;
 
         interface validateInsertContext {
@@ -174,7 +210,11 @@ export namespace EntryPoints {
             sublistId: string;
         }
 
-        /** @since 2015.2 */
+        /**
+         * Must be synchronous. NetSuite does not wait for a returned promise and treats it as true, so an async version
+         * cannot stop the action (verified for saveRecord on NetSuite 2026.2).
+         * @since 2015.2
+         */
         type validateInsert = (scriptContext: validateInsertContext) => boolean;
 
         interface validateLineContext {
@@ -182,7 +222,11 @@ export namespace EntryPoints {
             sublistId: string;
         }
 
-        /** @since 2015.2 */
+        /**
+         * Must be synchronous. NetSuite does not wait for a returned promise and treats it as true, so an async version
+         * cannot stop the action (verified for saveRecord on NetSuite 2026.2).
+         * @since 2015.2
+         */
         type validateLine = (scriptContext: validateLineContext) => boolean;
 
         interface localizationContext {
@@ -206,8 +250,12 @@ export namespace EntryPoints {
             request: N_http.ServerRequest | undefined;
         }
 
-        /** @since 2015.2 */
-        type beforeLoad = (scriptContext: beforeLoadContext) => void;
+        /**
+         * Can be async: NetSuite waits for the returned promise to settle (verified on NetSuite 2026.2).
+         * It also runs for a scripted record.create and record.load. If the promise rejects, the execution log shows only a generic UNEXPECTED_ERROR, so log errors before rethrowing.
+         * @since 2015.2
+         */
+        type beforeLoad = (scriptContext: beforeLoadContext) => void | Promise<void>;
 
         interface beforeSubmitContext {
             newRecord: N_record.Record;
@@ -216,8 +264,12 @@ export namespace EntryPoints {
             UserEventType: UserEventTypes;
         }
 
-        /** @since 2015.2 */
-        type beforeSubmit = (scriptContext: beforeSubmitContext) => void;
+        /**
+         * Can be async: NetSuite waits for the returned promise to settle (verified on NetSuite 2026.2).
+         * An error thrown after an await stops the save, and save() throws it. If the promise rejects, the execution log shows only a generic UNEXPECTED_ERROR, so log errors before rethrowing.
+         * @since 2015.2
+         */
+        type beforeSubmit = (scriptContext: beforeSubmitContext) => void | Promise<void>;
 
         interface afterSubmitContext {
             newRecord: N_record.Record & { id: number };
@@ -226,8 +278,13 @@ export namespace EntryPoints {
             UserEventType: UserEventTypes;
         }
 
-        /** @since 2015.2 */
-        type afterSubmit = (scriptContext: afterSubmitContext) => void;
+        /**
+         * Can be async: NetSuite waits for the returned promise to settle (verified on NetSuite 2026.2).
+         * An error thrown after an await reaches the caller of save(), after the record has saved.
+         * If the promise rejects, the execution log shows only a generic UNEXPECTED_ERROR, so log errors before rethrowing.
+         * @since 2015.2
+         */
+        type afterSubmit = (scriptContext: afterSubmitContext) => void | Promise<void>;
     }
 
     namespace Scheduled {
@@ -374,8 +431,12 @@ export namespace EntryPoints {
             response: N_http.ServerResponse;
         }
 
-        /** @since 2015.2 */
-        type onRequest = (scriptContext: onRequestContext) => void;
+        /**
+         * Can be async: NetSuite waits for the returned promise to settle (verified on NetSuite 2026.2).
+         * If the promise rejects, the response is an HTTP 500 error page. If the promise rejects, the execution log shows only a generic UNEXPECTED_ERROR, so log errors before rethrowing.
+         * @since 2015.2
+         */
+        type onRequest = (scriptContext: onRequestContext) => void | Promise<void>;
     }
 
     namespace MassUpdate {
