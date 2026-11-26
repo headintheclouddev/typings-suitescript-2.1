@@ -182,6 +182,9 @@ interface SearchResultSetGetRangeOptions {
 
 interface SearchResultSetGetRangeFunction {
     /**
+     * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts, where it runs
+     * asynchronously (verified on NetSuite 2026.2).
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @governance 10 units
      * @since 2015.2
      */
@@ -195,6 +198,10 @@ interface SearchResultSetGetRangeFunction {
 
 interface SearchResultSetEachFunction {
     /**
+     * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts (verified on
+     * NetSuite 2026.2). In a server script the call blocks while the search runs, for as long as `each` would, but it
+     * invokes the callback only after it returns, and the promise settles later still, so it gives no concurrency.
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * Invokes the callback for each result. The callback must return true to continue iterating, or false to stop.
      * @governance 10 units
      * @since 2015.2
@@ -223,6 +230,9 @@ interface FetchOptions {
 
 interface PageNextFunction {
     /**
+     * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts, where it runs
+     * asynchronously (verified on NetSuite 2026.2).
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @governance 5 units
      * @since 2016.1
      */
@@ -251,6 +261,9 @@ interface PagePrevFunction {
 
 interface PagedDataFetchFunction {
     /**
+     * Oracle documents this promise as client-only, but it also works in SuiteScript 2.1 server scripts, where it runs
+     * asynchronously (verified on NetSuite 2026.2).
+     * See https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/server-promise-apis.md
      * @governance 5 units
      * @since 2016.1
      */
