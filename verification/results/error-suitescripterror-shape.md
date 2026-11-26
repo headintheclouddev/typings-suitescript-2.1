@@ -88,4 +88,4 @@ Not tested: a `UserEventError`, which a user event script receives; `eventType` 
 
 ## Decision
 
-`SuiteScriptError.id` is `string | null`, and `SuiteScriptError` gains `type: string`. The doc comments on the interface, `stack` and `cause` say what was seen. `notifyOff` stays optional and `userFacing` is not added: Oracle does not document `userFacing`, and one run does not show what it means.
+`SuiteScriptError.id` is `string | null`, and `SuiteScriptError` gains `type`, typed as the literal `'error.SuiteScriptError'` so that a test of it narrows a caught value. The doc comments on the interface, `stack` and `cause` say what was seen. `notifyOff` stays optional and `userFacing` is not added: Oracle does not document `userFacing`, and one run does not show what it means.

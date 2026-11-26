@@ -16,7 +16,8 @@ interface CreateOptions {
 /**
  * Encapsulates a SuiteScript error thrown by any script type that is not a user event script.
  * It is a plain object, not an instance of Error, so `error instanceof Error` is false for one (verified on NetSuite
- * 2026.2). See verification/results/error-suitescripterror-shape.md.
+ * 2026.2).
+ * @see https://github.com/headintheclouddev/typings-suitescript-2.1/blob/master/verification/results/error-suitescripterror-shape.md
  * @since 2015.2
  */
 export interface SuiteScriptError {
@@ -53,9 +54,10 @@ export interface SuiteScriptError {
     readonly cause: any;
     /**
      * The kind of error object, which is always 'error.SuiteScriptError' (verified on NetSuite 2026.2).
-     * It tells a SuiteScriptError from other values a script may catch, as `instanceof Error` cannot.
+     * It tells a SuiteScriptError from other values a script may catch, as `instanceof Error` cannot:
+     * `if (e.type === 'error.SuiteScriptError')` narrows to one.
      */
-    readonly type: string;
+    readonly type: 'error.SuiteScriptError';
     /**
      * Whether email notification is suppressed.
      * @since 2015.2
