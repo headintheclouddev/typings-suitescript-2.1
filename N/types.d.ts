@@ -597,6 +597,39 @@ export namespace EntryPoints {
          */
         type handle = (options: handleContext) => void | Promise<void>;
     }
+
+    /**
+     * Custom Tool scripts build tools that an external AI client, such as Claude or ChatGPT, can invoke through the
+     * NetSuite AI Connector Service using the Model Context Protocol (MCP). Declare `@NScriptType CustomTool`
+     * (SuiteScript 2.1 only), and package the script in a `toolset` SDF object together with a JSON-RPC schema that
+     * defines each tool's name, description and input parameters. The script returns one method per tool, named as in
+     * the schema, and NetSuite calls the method with the tool's input parameters.
+     *
+     * The N/http, N/https, N/llm and N/sftp modules are not supported in custom tool scripts.
+     * @since 2025.2
+     */
+    namespace CustomTool {
+        /**
+         * The input parameters NetSuite passes to a tool method, keyed by parameter name, as defined in the toolset's
+         * JSON-RPC schema. The schema supports string, number and boolean parameters, and a parameter that is not
+         * listed as required can be missing.
+         */
+        type toolArgs = Record<string, string | number | boolean | undefined>;
+
+        /**
+         * The result a tool method returns: the tool's output properties, as defined in the toolset's JSON-RPC schema.
+         * The schema supports string, number, boolean and array properties, so stringify an object before returning it.
+         */
+        type toolResult = Record<string, string | number | boolean | unknown[] | undefined>;
+
+        /**
+         * Defines a tool method that an AI client can invoke through the NetSuite AI Connector Service. The method name
+         * must match a tool name in the toolset's JSON-RPC schema, and every tool method must be asynchronous.
+         * @since 2025.2
+         */
+        type toolMethod<Args extends toolArgs = toolArgs, Result extends toolResult = toolResult> =
+            (args: Args) => Promise<Result>;
+    }
 }
 
 interface IKeyValuePair {
